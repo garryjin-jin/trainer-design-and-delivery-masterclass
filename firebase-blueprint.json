@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information and role.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "instructor"] },
+        "knowledgeBase": { "type": "string", "description": "The instructor's knowledge base text." }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Scenario": {
+      "title": "Scenario",
+      "description": "A training scenario with a multiple-choice question.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "question": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } },
+        "correctAnswerIndex": { "type": "integer" },
+        "explanation": { "type": "string" },
+        "concepts": { "type": "string" },
+        "applications": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "instructorId": { "type": "string" }
+      },
+      "required": ["title", "content", "question", "options", "correctAnswerIndex", "status", "createdAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "A student's quiz attempt.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "scenarioIds": { "type": "array", "items": { "type": "string" } },
+        "answers": { 
+          "type": "array", 
+          "items": { 
+            "type": "object",
+            "properties": {
+              "scenarioId": { "type": "string" },
+              "selectedIndex": { "type": "integer" },
+              "isCorrect": { "type": "boolean" }
+            }
+          }
+        },
+        "score": { "type": "integer" },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "scenarioIds", "completed", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles."
+    },
+    "/scenarios/{scenarioId}": {
+      "schema": "Scenario",
+      "description": "Training scenarios."
+    },
+    "/quizzes/{quizId}": {
+      "schema": "Quiz",
+      "description": "Student quiz attempts."
+    }
+  }
+}
